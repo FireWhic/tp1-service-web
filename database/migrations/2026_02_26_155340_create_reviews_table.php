@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Ramsey\Uuid\Type\Integer;
 
 return new class extends Migration
 {
@@ -11,13 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('first_name', 50);
-            $table->string('last_name', 50);
-            $table->string('email', 50);
-            $table->string('phone', 12);
+            $table->tinyInteger('rating');
+            $table->text('comment');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('rental_id')->constrained();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('reviews');
     }
 };
