@@ -31,20 +31,12 @@ class UserController extends Controller
     {
         try {
             $user = User::create($request->validated());
-            return (new UserResource($user))->response()->setStatusCode(201);
+            return (new UserResource($user))->response()->setStatusCode(CREATED);
         } catch (QueryException $ex) {
             abort(INVALID_DATA, 'Cannot be created in database');
         } catch (Exception $ex) {
             abort(SERVER_ERROR, 'Server error');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -66,13 +58,5 @@ class UserController extends Controller
         } catch (Exception $ex) {
             abort(SERVER_ERROR, 'Server error');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
