@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EquipmentResource;
 use App\Models\Equipment;
-use App\Models\Rental;
-use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class EquipmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/equipment',
+        summary: 'Récupérer la liste des équipements',
+        description: 'Retourner la liste des équipements',
+        tags: ['Equipment'],
+        responses: [new OA\Response(response: 200, description: 'OK')]
+    )]
     public function index()
     {
         try {
@@ -24,9 +26,23 @@ class EquipmentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/equipment/{id}',
+        summary: 'Afficher un équipement',
+        tags: ['Equipment'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID de l`équipement',
+                in: 'path',
+                required: true,
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+            new OA\Response(response: 404, description: 'Équipement non trouvé')
+        ]
+    )]
     public function show(string $id)
     {
         try {
@@ -38,6 +54,13 @@ class EquipmentController extends Controller
         }
     }
     
+    #[OA\Get(
+        path: '/api/equipment/popularity',
+        summary: 'Afficher l`indice de popularité de chaque équipement',
+        description: 'Retourne les indices de popularité des équipements',
+        tags: ['Equipment'],
+        responses: [new OA\Response(response: 200, description: 'OK')]
+    )]
     public function showPopularity()
     {
         try {

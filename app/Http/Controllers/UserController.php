@@ -6,15 +6,19 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/users',
+        summary: 'Récupérer la liste des utilisateurs',
+        description: 'Retourner la liste des utilisateurs',
+        tags: ['Users'],
+        responses: [new OA\Response(response: 200, description: 'OK')]
+    )]
     public function index()
     {
         try {
@@ -24,9 +28,28 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/users',
+        summary: 'Ajouter un utilisateur',
+        tags: ['Users'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: [
+                new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'first_name', type: 'string', example: 'Samuel'),
+                        new OA\Property(property: 'last_name', type: 'string', example: 'Lechamplain'),
+                        new OA\Property(property: 'email', type: 'string', example: 'oui@gmail.com'),
+                        new OA\Property(property: 'phone', type: 'string', example: '418-321-3210')
+                    ]
+                )
+            ]
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Utilisateur ajouté'),
+            new OA\Response(response: 422, description: 'Données invalides')
+        ]
+    )]
     public function store(StoreUserRequest $request)
     {
         try {
@@ -39,9 +62,36 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Patch(
+        path: '/api/users/{id}',
+        summary: 'Modifier un utilisateur',
+        tags: ['Users'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: [
+                new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'first_name', type: 'string', example: 'Samuel'),
+                        new OA\Property(property: 'last_name', type: 'string', example: 'Lechamplain'),
+                        new OA\Property(property: 'email', type: 'string', example: 'oui@gmail.com'),
+                        new OA\Property(property: 'phone', type: 'string', example: '418-321-3210')
+                    ]
+                )
+            ]
+        ),
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID de l`utilisateur',
+                in: 'path',
+                required: true,
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'OK'),
+            new OA\Response(response: 422, description: 'Données invalides')
+        ]
+    )]
     public function update(Request $request, string $id)
     {
         try {
